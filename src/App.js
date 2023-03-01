@@ -1,13 +1,38 @@
 import logo from './logo.svg';
+import MyThirdComponent from './NewModule.jsx';
 import './App.css';
 
+function MyFirstComponent() {
+  const comp = 'I am from the First Component function';
+
+  return (
+     <div>
+       {comp}
+  </div> 
+  )
+}
+
+function MySecondComponent() {
+  
+  return (
+     <h3>
+      I'm Second Component!
+     </h3> 
+  )
+}
+
 function App() {
+  
+  const message = 'Hello, I am your first React code!';
   return (
     <div className="App">
       <header className="App-header">
+        <MyFirstComponent />
+        <MySecondComponent />
+        <MyThirdComponent />
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+        {message}
         </p>
         <a
           className="App-link"
