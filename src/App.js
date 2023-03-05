@@ -16,7 +16,7 @@ function MySecondComponent() {
   
   return (
      <h3>
-      I'm Second Component!
+      I'm Second Component!!
      </h3> 
   )
 }
