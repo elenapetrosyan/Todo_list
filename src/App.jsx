@@ -1,56 +1,91 @@
-import {Component} from 'react';
-import logo from './logo.svg';
-import ProductName from './Product_Name.jsx';
-import ProductPrice from './Product_Price.jsx';
-import ProductDescription from './Product_Description.jsx';
 import './App.css';
+import Product from './products/Product';
+import Counter from './Counter';
+import { Component } from 'react';
 
-class Product extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
-    render() {
 
-      console.log('this.props', this.props);
+class App extends Component {
+
+  state = {
+
+    amd:0,
+    exchangeRate: 391,
+
+    products: [
+      {
+        name: 'banana',
+        price: '5',
+        description: 'Tasty bananas!'
+      },
+
+      {
+        name: 'plums',
+        price: '7',
+        description: 'Tasty plums!'
+      },
+
+      {
+        name: 'peaches',
+        price: '10',
+        description: 'Tasty peaches!'
+      },
+
+      {
+        name: 'pears',
+        price: '15',
+        description: 'Tasty pears!'
+      }
+    ]
+  }
+
+  
+  handleInputChange = (event) => {
+    // console.log(event.target.value);
+    this.setState({
+      amd: event.target.value,
+    })
+  };
+  
+  render() {
+    const productComponents = this.state.products.map((product) => {
+      return (
+        <Product
+          key={product.name}
+          name={product.name}
+          price={product.price}
+          description={product.description}
+        />
+      )
+    });
+
+    console.log(productComponents);
+
+    const usd = (this.state.amd / this.state.exchangeRate).toFixed(2);
+
     return (
-      <div>
-      <h3>
-        {this.props.text} <br/> 
-        {this.props.name} {this.props.price} {this.props.description};
+      <div className="App">
 
-      </h3>
+        {productComponents}
+        
+        <Counter />
+
+        
+        AMD: <input 
+        type="number" 
+        placeholder='Input AMD'
+        onChange = {this.handleInputChange}
+        
+        /> 
+        = 
+        USD: <input type="text" 
+        value={usd} readOnly={true}
+        />
+
       </div>
     );
   }
-}
 
 
-function App() {
-  
-  const message = 'Hello, I am your first React code!';
-  return (
-    <div className="App">
-      <header className="App-header">
-              
-        <Product text='Lesson-61' name='Bananas' price='5$' description='Fresh bananas from Ecuador' />
-        <ProductName />
-        <ProductPrice />
-        <ProductDescription />
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-        {message}
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
 }
 
 export default App;
