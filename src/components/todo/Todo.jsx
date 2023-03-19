@@ -6,7 +6,6 @@ import {
     InputGroup,
     Form,
     Button,
-    Card
 } from "react-bootstrap";
 import { idGenerator } from '../../utils/helpers';
 import Task from '../task/Task';
