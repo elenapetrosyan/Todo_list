@@ -8,13 +8,17 @@ import {
     Button,
     Card
 } from "react-bootstrap";
-import { idGenerator } from '../utils/helpers';
-import Task from './Task';
+import { idGenerator } from '../../utils/helpers';
+import Task from '../task/Task';
+import styles from './todo.module.css'
+import ConfirmDialog from "../ConfirmDialog";
+
 
 class Todo extends Component {
     state = {
         tasks: [],
         newTaskTitle: "",
+        selectedTasks: new Set(),
     };
 
     handleInputChange = (event) => {
@@ -49,9 +53,53 @@ class Todo extends Component {
         })
     };
 
+
+    onTaskDelete = (taskId) => {
+        const {selectedTasks, tasks} = this.state;
+        const newTasks = tasks.filter(task => task.id !== taskId);
+        
+        const newState = { tasks: newTasks };
+
+        if(selectedTasks.has(taskId)) {
+            const newSelectedTasks = new Set(selectedTasks);
+            newSelectedTasks.delete(taskId);
+            newState.selectedTasks = newSelectedTasks;
+        }
+        
+        this.setState(newState);
+    };
+
+    onTaskSelect = (taskId) => {
+        const selectedTasks = new Set(this.state.selectedTasks);
+
+        if (selectedTasks.has(taskId)) {
+            selectedTasks.delete(taskId);
+        }
+        else {
+            selectedTasks.add(taskId);
+        }
+        this.setState({ selectedTasks });
+    }
+
+    deleteSelectedTasks = () => {
+        const newTasks = [];
+        const { selectedTasks, tasks } = this.state;
+        
+        tasks.forEach((task) => {
+            if(!selectedTasks.has(task.id)) {
+                newTasks.push(task);
+            }
+        });
+        this.setState({
+            tasks: newTasks, 
+            selectedTasks:  new Set(),
+        });
+        
+    };
+
     render() {
         const isAddNewTaskButtonDisabled = this.state.newTaskTitle.trim() === '';
-
+        
         return (
             <Container>
                 <Row className="justify-content-center">
@@ -78,12 +126,26 @@ class Todo extends Component {
 
                     {this.state.tasks.map((task) => {
                         return (
-                            <Task data={task} key={task.id} />
+                            <Task
+                                data={task}
+                                key={task.id}
+                                onTaskDelete={this.onTaskDelete}
+                                onTaskSelect={this.onTaskSelect}
+                            />
                         );
 
                     })}
 
                 </Row>
+                <Button
+                    className={styles.deleteSelected}
+                    variant="danger"
+                    onClick={this.deleteSelectedTasks}
+                disabled={!this.state.selectedTasks.size}
+                >
+                    Delete selected
+                </Button>
+                    <ConfirmDialog/>
             </Container>
         );
     }
