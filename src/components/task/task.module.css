@@ -1,0 +1,22 @@
+.deleteButton {
+    margin-left: 10px;
+}
+
+.editButton {
+
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: right;
+}
+
+.selectTask {   /*for checkbox*/
+    width: 18px;
+    height: 18px;
+    margin-bottom: 15px;
+}
+
+.selectTask input {
+    cursor: pointer;
+}
