@@ -1,3 +1,5 @@
+
+import PropTypes from 'prop-types';
 import { Col, Card, Button, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
@@ -36,6 +38,12 @@ function Task(props) {
             </Card>
         </Col>
     );
+};
+
+Task.propTypes = {
+    data: PropTypes.object.isRequired,
+    onTaskDelete: PropTypes.func.isRequired,
+    onTaskSelect: PropTypes.func.isRequired,
 };
 
 export default Task;
