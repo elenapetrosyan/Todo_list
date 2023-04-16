@@ -14,7 +14,14 @@ export default class TaskApi {
             params.body = JSON.stringify(body);
         }
 
-        return fetch(taskApiUrl, params).then((result) => result.json());
+        return fetch(taskApiUrl, params)
+        .then((result) => result.json())
+        .then((data) => {
+            if(data.error) {
+                throw data.error;
+            }
+            return data;
+        });
     }
 
     getAll() {

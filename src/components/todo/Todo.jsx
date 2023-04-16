@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 import {
     Container,
     Row,
     Col,
-    InputGroup,
-    Form,
     Button,
 } from "react-bootstrap";
 import Task from '../task/Task';
 import styles from './todo.module.css'
 import ConfirmDialog from "../ConfirmDialog";
+import TaskModal from "../taskModal/TaskModal.jsx";
 import TaskApi from '../../api/taskApi';
 
 
@@ -19,14 +19,15 @@ const taskApi = new TaskApi();
 
 function Todo() {
     const [tasks, setTasks] = useState([]);
-    const [newTaskTitle, setNewTaskTitle] = useState('');
     const [selectedTasks, setSelectedTasks] = useState(new Set());
+    //const [taskToDelete, setTaskToDelete] = useState(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+    const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
 
     useEffect(() => {
         taskApi.getAll().then((tasks) => {
-                setTasks(tasks);
-            });
+            setTasks(tasks);
+        });
 
 
         // fetch(apiUrl+'/task', {
@@ -44,33 +45,27 @@ function Todo() {
 
 
     const handleInputChange = (event) => {
-        setNewTaskTitle(event.target.value);
+        // setNewTaskTitle(event.target.value);
     };
 
     const handleInputKeyDown = (event) => {
         if (event.code === 'Enter') {
-            addNewTask();
+            OnAddNewTask();
         }
     };
 
-    const addNewTask = () => {
-        const trimmedTitle = newTaskTitle.trim(); // trim - ktrum e probelnere toxi skzbic ev verjic
-
-        if (trimmedTitle === '') {
-            return;
-        }
-
-
-        const newTask = {
-            title: trimmedTitle,
-        };
-
+    const OnAddNewTask = (newTask) => {
         taskApi.add(newTask)
             .then((task) => {
                 const tasksCopy = [...tasks];
                 tasksCopy.push(task);
                 setTasks(tasksCopy);
-                setNewTaskTitle('');
+                setIsAddTaskModalOpen(false);
+                toast.success('🦄 The task has been added successfully!');
+            })
+            .catch((err) => {
+                console.log('err', err);
+                toast.error(err.message);
             });
     };
 
@@ -115,27 +110,18 @@ function Todo() {
         setIsConfirmDialogOpen(!isConfirmDialogOpen);
     };
 
-    const isAddNewTaskButtonDisabled = newTaskTitle.trim() === '';
+    let newTaskTitle = '';
 
     return (
         <Container>
             <Row className="justify-content-center">
                 <Col xs='12' sm='8' md='6' >
-                    <InputGroup className="mb-3 mt-3">
-                        <Form.Control
-                            placeholder="Input Task"
-                            onChange={handleInputChange}
-                            onKeyDown={handleInputKeyDown}
-                            value={newTaskTitle}
-                        />
-                        <Button
-                            variant="success"
-                            onClick={addNewTask}
-                            disabled={isAddNewTaskButtonDisabled}
-                        >
-                            Add
-                        </Button>
-                    </InputGroup>
+                    <Button
+                        variant="success"
+                        onClick={() => setIsAddTaskModalOpen(true)}
+                    >
+                        Add new task
+                    </Button>
                 </Col>
             </Row>
 
@@ -161,13 +147,33 @@ function Todo() {
             >
                 Delete selected
             </Button>
-            {isConfirmDialogOpen &&
+            {isConfirmDialogOpen && (
                 <ConfirmDialog
                     tasksCount={selectedTasks.size}
                     onCancel={toggleConfirmDialog}
                     onSubmit={deleteSelectedTasks}
                 />
+            )}
+
+            {
+                isAddTaskModalOpen &&
+                <TaskModal
+                    onCancel={() => setIsAddTaskModalOpen(false)}
+                    onSave={OnAddNewTask}
+                />
             }
+            <ToastContainer
+                position="bottom-left"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+            />
         </Container>
     );
 
