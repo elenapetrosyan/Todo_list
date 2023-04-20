@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Col, Card, Button, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { formatDate } from "../../utils/helpers";
 import styles from './task.module.css';
 
 function Task(props) {
@@ -12,16 +13,23 @@ function Task(props) {
         <Col xs={12} sm={6} md={4} lg={3}>
             <Card className='mt-2 mb-2'>
                 <Card.Body>
-                    <Form.Check 
-                    className={styles.selectTask} 
-                    onClick = {() => props.onTaskSelect(task._id)}
+                    <Form.Check
+                        className={styles.selectTask}
+                        onChange={() => props.onTaskSelect(task._id)}
+                        checked = {props.checked}
                     />
-                    <Card.Title>{task.title}</Card.Title>
-                    <Card.Text>
-                        Description
+                    <Card.Title className={styles.textEllipsis}>{task.title}</Card.Title>
+                    <Card.Text className={styles.textEllipsis}>
+                        {task.description}
                     </Card.Text>
+                    <Card.Text> Status: {task.status} </Card.Text>
+                    <Card.Text> Created At: {formatDate(task.created_at)} </Card.Text>
+                    <Card.Text> Deadline: {formatDate(task.date)} </Card.Text>
                     <div className={styles.actionButtons}>
-                        <Button variant="warning">
+                        <Button 
+                        variant="warning"
+                        onClick = {() => props.onTaskEdit(task)}
+                        >
                             <FontAwesomeIcon icon={faPenToSquare} />
                         </Button>
 
@@ -44,6 +52,8 @@ Task.propTypes = {
     data: PropTypes.object.isRequired,
     onTaskDelete: PropTypes.func.isRequired,
     onTaskSelect: PropTypes.func.isRequired,
+    onTaskEdit: PropTypes.func.isRequired,
+    checked: PropTypes.bool.isRequired,
 };
 
-export default Task;
+export default (Task);
