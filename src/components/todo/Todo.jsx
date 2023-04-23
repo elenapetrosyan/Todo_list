@@ -10,6 +10,8 @@ import Task from '../task/Task';
 import styles from './todo.module.css'
 import ConfirmDialog from "../ConfirmDialog";
 import TaskModal from "../taskModal/TaskModal.jsx";
+import NavBar from "../NavBar/NavBar";
+import Filters from "../filters/Filters.jsx";
 import TaskApi from '../../api/taskApi';
 
 
@@ -24,9 +26,13 @@ function Todo() {
     const [editableTask, setEditableTask] = useState(null);
 
     useEffect(() => {
-        taskApi.getAll().then((tasks) => {
-            setTasks(tasks);
-        });
+        taskApi.getAll()
+            .then((tasks) => {
+                setTasks(tasks);
+            })
+            .catch((err) => {
+                toast.error(err.message);
+            });
     }, []);
 
     const onAddNewTask = (newTask) => {
@@ -39,7 +45,6 @@ function Todo() {
                 toast.success('🦄 The task has been added successfully!');
             })
             .catch((err) => {
-                console.log('err', err);
                 toast.error(err.message);
             });
     };
@@ -112,7 +117,7 @@ function Todo() {
         setSelectedTasks(new Set());
     };
 
-    const onEditTask = (editedTask) => {        
+    const onEditTask = (editedTask) => {
         taskApi
             .update(editedTask)
             .then((task) => {
@@ -124,13 +129,16 @@ function Todo() {
                 toast.error(err.message);
             });
 
-        
+
     };
 
     return (
         <Container>
-            <Row className="justify-content-center">
-                <Col xs='12' sm='8' md='6' >
+            <Row>
+                <NavBar />
+            </Row>
+            <Row className="justify-content-center m-2">
+                <Col xs='6' sm='4' md='3' >
                     <Button
                         variant="success"
                         onClick={() => setIsAddTaskModalOpen(true)}
@@ -140,7 +148,7 @@ function Todo() {
                 </Col>
 
                 <Col xs='6' sm='4' md='3'>
-                    <Button variant='warning' onClick={selectAllTasks}>
+                    <Button variant='primary' onClick={selectAllTasks}>
                         Select all
                     </Button>
                 </Col>
@@ -153,6 +161,10 @@ function Todo() {
             </Row>
 
             <Row>
+                <Filters />
+            </Row>
+
+            <Row>
                 {tasks.map((task) => {
                     return (
                         <Task
@@ -162,6 +174,7 @@ function Todo() {
                             onTaskSelect={onTaskSelect}
                             checked={selectedTasks.has(task._id)}
                             onTaskEdit={setEditableTask}
+                            onStatusChange = { onEditTask }
                         />
                     );
 

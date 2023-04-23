@@ -1,4 +1,4 @@
-import { useLayoutEffect, useEffect, useState } from "react";
+import { useLayoutEffect, useEffect, useState, memo } from "react";
 import {
   Form,
   Button,
@@ -16,13 +16,14 @@ function TaskModal(props) {
   const [isTitleValid, setIsTitleValid] = useState(false);
 
   useEffect(() => {
-    const {data} = props;
-    if(data) {
+    const { data } = props;
+    if (data) {
       setTitle(data.title);
       setDescription(data.description);
       setDate(new Date(data.date));
+      //setDate(data.date ? new Date(data.date) : new Date());
     }
-  }, []);
+  }, [props]);
 
   const saveTask = () => {
     const newTask = {
@@ -30,7 +31,7 @@ function TaskModal(props) {
       description: description.trim(),
       date: formatDate(date)
     };
-    if(props.data) {
+    if (props.data) {
       newTask._id = props.data._id;
     }
 
@@ -45,21 +46,21 @@ function TaskModal(props) {
     setTitle(value);
   };
 
-  const keydownHandler = (event) => {
-
-    if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
-      event.preventDefault();
-      saveTask();
-    }
-  };
-
   useLayoutEffect(() => {
+    const keydownHandler = (event) => {
+
+      if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        saveTask();
+      }
+    };
+
     document.addEventListener('keydown', keydownHandler);
 
     return () => {
       document.removeEventListener('keydown', keydownHandler);
     };
-  }, []);
+  }, [title, description, date]);
 
   return (
     <Modal
@@ -104,6 +105,7 @@ function TaskModal(props) {
           >
             Save
           </Button>
+          
           <Button
             variant='warning' onClick={props.onCancel}>
             Cancel </Button>
@@ -119,4 +121,4 @@ TaskModal.propTypes = {
   data: PropTypes.object
 };
 
-export default TaskModal;
+export default memo(TaskModal);
