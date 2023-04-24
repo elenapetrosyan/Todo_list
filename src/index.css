@@ -5,5 +5,16 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
+
+  background-image: url(images/bg_tl.png), url(images/bg_br.png), linear-gradient(to bottom right, #d6f5c2, #ffffff, #d6f5c2);
+  background-position: top left, bottom right, center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+
+}
+
+.task-bg,
+.modal-content-bg {
+  background-color: #EBF7E3 !important;
+  border-color: #769254 !important;
 }

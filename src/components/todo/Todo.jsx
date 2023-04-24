@@ -25,18 +25,23 @@ function Todo() {
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
     const [editableTask, setEditableTask] = useState(null);
 
-    useEffect(() => {
-        taskApi.getAll()
+    const getTasks = (filters) => {
+        taskApi.getAll(filters)
             .then((tasks) => {
                 setTasks(tasks);
             })
             .catch((err) => {
                 toast.error(err.message);
             });
+    };
+
+    useEffect(() => {
+        getTasks();
     }, []);
 
     const onAddNewTask = (newTask) => {
-        taskApi.add(newTask)
+        taskApi
+            .add(newTask)
             .then((task) => {
                 const tasksCopy = [...tasks];
                 tasksCopy.push(task);
@@ -96,7 +101,6 @@ function Todo() {
                 setTasks(newTasks);
                 setSelectedTasks(new Set());
                 setIsConfirmDialogOpen(false);
-
                 toast.success(`🦄 ${deletedTasksCount} tasks have been deleted successfully!`);
             })
             .catch((err) => {
@@ -122,15 +126,21 @@ function Todo() {
             .update(editedTask)
             .then((task) => {
                 console.log('task', task);
+                const newTasks = [...tasks];
+                const foundIndex = newTasks.findIndex((t) => t._id === task._id);
+                newTasks[foundIndex] = task;
                 toast.success(`🦄 task has been updated successfully!`);
+                setTasks(newTasks);
                 setEditableTask(null);
             })
             .catch((err) => {
                 toast.error(err.message);
             });
-
-
     };
+
+    const onFilter = (filters)=>{
+        getTasks(filters);
+      };
 
     return (
         <Container>
@@ -138,30 +148,30 @@ function Todo() {
                 <NavBar />
             </Row>
             <Row className="justify-content-center m-2">
-                <Col xs='6' sm='4' md='3' >
+                <Col xs='6' sm='4' md='3' className="text-center p-1">
                     <Button
-                        variant="success"
+                        variant="success w-100"
                         onClick={() => setIsAddTaskModalOpen(true)}
                     >
                         Add new task
                     </Button>
                 </Col>
 
-                <Col xs='6' sm='4' md='3'>
-                    <Button variant='primary' onClick={selectAllTasks}>
+                <Col xs='6' sm='4' md='3' className="text-center p-1">
+                    <Button variant='primary w-100' onClick={selectAllTasks}>
                         Select all
                     </Button>
                 </Col>
 
-                <Col xs='6' sm='4' md='3'>
-                    <Button variant='secondary' onClick={resetSelectedTasks}>
+                <Col xs='6' sm='4' md='3' className="text-center p-1">
+                    <Button variant='secondary w-100' onClick={resetSelectedTasks}>
                         Reset selected
                     </Button>
                 </Col>
             </Row>
 
             <Row>
-                <Filters />
+            <Filters onFilter={onFilter}/>
             </Row>
 
             <Row>
@@ -174,7 +184,7 @@ function Todo() {
                             onTaskSelect={onTaskSelect}
                             checked={selectedTasks.has(task._id)}
                             onTaskEdit={setEditableTask}
-                            onStatusChange = { onEditTask }
+                            onStatusChange={onEditTask}
                         />
                     );
 

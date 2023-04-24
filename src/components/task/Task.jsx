@@ -1,4 +1,4 @@
-
+import {memo} from 'react';
 import PropTypes from 'prop-types';
 import { Col, Card, Button, Form } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,7 +11,7 @@ function Task(props) {
 
     return (
         <Col xs={12} sm={6} md={4} lg={3}>
-            <Card className='mt-2 mb-2'>
+            <Card className='mt-2 mb-2 task-bg'>
                 <Card.Body>
                     <Form.Check
                         className={styles.selectTask}
@@ -34,6 +34,7 @@ function Task(props) {
                                     onClick={() => props.onStatusChange({ status: 'done', _id: task._id })}>
                                     <FontAwesomeIcon icon={faCheck} />
                                 </Button> :
+
                                 <Button
                                     title="Mark as active"
                                     variant="info"
@@ -76,4 +77,4 @@ Task.propTypes = {
     checked: PropTypes.bool.isRequired,
 };
 
-export default (Task);
+export default memo(Task);

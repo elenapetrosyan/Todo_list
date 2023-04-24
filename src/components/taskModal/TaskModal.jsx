@@ -20,8 +20,8 @@ function TaskModal(props) {
     if (data) {
       setTitle(data.title);
       setDescription(data.description);
-      setDate(new Date(data.date));
-      //setDate(data.date ? new Date(data.date) : new Date());
+      setDate(data.date ? new Date(data.date) : new Date());
+      setIsTitleValid(true);
     }
   }, [props]);
 
@@ -68,11 +68,11 @@ function TaskModal(props) {
       show={true}
       onHide={props.onCancel}
     >
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="modal-content-bg">
         <Modal.Title> Add new task </Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
+      <Modal.Body className="modal-content-bg">
         <Form.Control
           className={`${!isTitleValid ? styles.invalid : ''} mb-2`}
           placeholder="Title"
@@ -96,7 +96,7 @@ function TaskModal(props) {
         />
       </Modal.Body>
 
-      <Modal.Footer>
+      <Modal.Footer className="modal-content-bg">
         <div className="d-flex justify-content-evenly gap-3">
           <Button
             variant='success'
@@ -105,7 +105,7 @@ function TaskModal(props) {
           >
             Save
           </Button>
-          
+
           <Button
             variant='warning' onClick={props.onCancel}>
             Cancel </Button>
