@@ -48,15 +48,15 @@ function Filters(props) {
 
   const [dateFilters, setDateFilters] = useState(initialDateFilters);
 
-  const resetFilters = ()=>{
-      setSearch('');
-      setDateFilters(initialDateFilters);
-      setOptionFilters(initialOptionFilters);
-      props.onFilter({
-        search: '',
-        ...initialDateFilters,
-        ...initialOptionFilters,
-      });
+  const resetFilters = () => {
+    setSearch('');
+    setDateFilters(initialDateFilters);
+    setOptionFilters(initialOptionFilters);
+    props.onFilter({
+      search: '',
+      ...initialDateFilters,
+      ...initialOptionFilters,
+    });
   };
 
   const onFilterOptionChange = (name, value) => {
@@ -70,14 +70,14 @@ function Filters(props) {
     setSearch(event.target.value);
   };
 
-  const onDateChange = (name, date)=>{
+  const onDateChange = (name, date) => {
     setDateFilters({
       ...dateFilters,
       [name]: formatDate(date)
     });
   };
 
-  const onApplyFilters = ()=> {
+  const onApplyFilters = () => {
     const filters = {
       search: search,
       ...dateFilters,
@@ -109,11 +109,11 @@ function Filters(props) {
             >
               <FontAwesomeIcon icon={faSearch} />
             </span>
-            <span 
-            onClick={resetFilters}
-            className="btn btn-outline-info" 
-            title="Reset filters">
-              <FontAwesomeIcon icon={faRefresh} 
+            <span
+              onClick={resetFilters}
+              className="btn btn-outline-info"
+              title="Reset filters">
+              <FontAwesomeIcon icon={faRefresh}
               />
             </span>
           </Form>
@@ -121,56 +121,60 @@ function Filters(props) {
         <Accordion.Body>
           <Container fluid={true}>
             <Row>
-            {dateOptions.map((dateOption) => {
-              const dateValue = dateFilters[dateOption.value];
-              return (
-                <Col sm={6} md={4} lg={3} 
-                className="text-center"
-                key={dateOption.label}
-                >
-                <fieldset className={styles.filterItem}>
-                  <legend>{dateOption.label}</legend>
-                  <DatePicker
-                    showIcon
-                    selected={dateValue ? new Date(dateValue): ''}
-                    onChange={(date)=>onDateChange(dateOption.value, date)}
-                  />
-                </fieldset>
-              </Col>
-              )
-            })}
+              {dateOptions.map((dateOption) => {
+                const dateValue = dateFilters[dateOption.value];
+                return (
+                  <Col sm={6} md={4} lg={3}
+                    className="text-center"
+                    key={dateOption.label}
+                  >
+                    <fieldset className={styles.filterItem}>
+                      <legend>{dateOption.label}</legend>
+                      <DatePicker
+                        showIcon
+                        selected={dateValue ? new Date(dateValue) : ''}
+                        onChange={(date) => onDateChange(dateOption.value, date)}
+                      />
+                    </fieldset>
+                  </Col>
+                )
+              })}
             </Row>
             <Row>
               <Col sm={6} className="text-center">
                 <fieldset>
-                  <legend>Status</legend>
-                  <Form.Select 
-                  onChange={(event)=>onFilterOptionChange('status', event.target.value)}
-                  value={optionFilters.status}
+                  <legend>
+                    Status
+                  </legend>
+                  <Form.Select
+                    onChange={(event) => onFilterOptionChange('status', event.target.value)}
+                    value={optionFilters.status}
                   >
-                  {statusOptions.map((statusOption) => (
-                      <option 
-                      key={statusOption.label}
-                      value={statusOption.value}
+                    {statusOptions.map((statusOption) => (
+                      <option
+                        key={statusOption.label}
+                        value={statusOption.value}
                       >
                         {statusOption.label}
                       </option>
                     )
-                  )}
+                    )}
                   </Form.Select>
                 </fieldset>
               </Col>
               <Col sm={6} className="text-center">
                 <fieldset>
-                  <legend>Sort</legend>
-                  <Form.Select 
-                  onChange={(event)=>onFilterOptionChange('sort', event.target.value)}
-                  value={optionFilters.sort}
+                  <legend>
+                    Sort
+                  </legend>
+                  <Form.Select
+                    onChange={(event) => onFilterOptionChange('sort', event.target.value)}
+                    value={optionFilters.sort}
                   >
                     {sortOptions.map((sortOption) => (
-                      <option 
-                      key={sortOption.label}
-                      value={sortOption.value}
+                      <option
+                        key={sortOption.label}
+                        value={sortOption.value}
                       >
                         {sortOption.label}
                       </option>
