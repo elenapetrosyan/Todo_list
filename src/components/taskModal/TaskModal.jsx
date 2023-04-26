@@ -1,4 +1,4 @@
-import { useLayoutEffect, useEffect, useState } from "react";
+import { useLayoutEffect, useEffect, useState, memo } from "react";
 import {
   Form,
   Button,
@@ -16,13 +16,14 @@ function TaskModal(props) {
   const [isTitleValid, setIsTitleValid] = useState(false);
 
   useEffect(() => {
-    const {data} = props;
-    if(data) {
+    const { data } = props;
+    if (data) {
       setTitle(data.title);
       setDescription(data.description);
-      setDate(new Date(data.date));
+      setDate(data.date ? new Date(data.date) : new Date());
+      setIsTitleValid(true);
     }
-  }, []);
+  }, [props]);
 
   const saveTask = () => {
     const newTask = {
@@ -30,7 +31,7 @@ function TaskModal(props) {
       description: description.trim(),
       date: formatDate(date)
     };
-    if(props.data) {
+    if (props.data) {
       newTask._id = props.data._id;
     }
 
@@ -45,21 +46,21 @@ function TaskModal(props) {
     setTitle(value);
   };
 
-  const keydownHandler = (event) => {
-
-    if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
-      event.preventDefault();
-      saveTask();
-    }
-  };
-
   useLayoutEffect(() => {
+    const keydownHandler = (event) => {
+
+      if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        saveTask();
+      }
+    };
+
     document.addEventListener('keydown', keydownHandler);
 
     return () => {
       document.removeEventListener('keydown', keydownHandler);
     };
-  }, []);
+  }, [title, description, date]);
 
   return (
     <Modal
@@ -67,11 +68,11 @@ function TaskModal(props) {
       show={true}
       onHide={props.onCancel}
     >
-      <Modal.Header closeButton>
+      <Modal.Header closeButton className="modal-content-bg">
         <Modal.Title> Add new task </Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>
+      <Modal.Body className="modal-content-bg">
         <Form.Control
           className={`${!isTitleValid ? styles.invalid : ''} mb-2`}
           placeholder="Title"
@@ -95,7 +96,7 @@ function TaskModal(props) {
         />
       </Modal.Body>
 
-      <Modal.Footer>
+      <Modal.Footer className="modal-content-bg">
         <div className="d-flex justify-content-evenly gap-3">
           <Button
             variant='success'
@@ -104,6 +105,7 @@ function TaskModal(props) {
           >
             Save
           </Button>
+
           <Button
             variant='warning' onClick={props.onCancel}>
             Cancel </Button>
@@ -119,4 +121,4 @@ TaskModal.propTypes = {
   data: PropTypes.object
 };
 
-export default TaskModal;
+export default memo(TaskModal);

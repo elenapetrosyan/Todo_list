@@ -10,6 +10,8 @@ import Task from '../task/Task';
 import styles from './todo.module.css'
 import ConfirmDialog from "../ConfirmDialog";
 import TaskModal from "../taskModal/TaskModal.jsx";
+import NavBar from "../NavBar/NavBar";
+import Filters from "../filters/Filters.jsx";
 import TaskApi from '../../api/taskApi';
 
 
@@ -23,14 +25,23 @@ function Todo() {
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
     const [editableTask, setEditableTask] = useState(null);
 
+    const getTasks = (filters) => {
+        taskApi.getAll(filters)
+            .then((tasks) => {
+                setTasks(tasks);
+            })
+            .catch((err) => {
+                toast.error(err.message);
+            });
+    };
+
     useEffect(() => {
-        taskApi.getAll().then((tasks) => {
-            setTasks(tasks);
-        });
+        getTasks();
     }, []);
 
     const onAddNewTask = (newTask) => {
-        taskApi.add(newTask)
+        taskApi
+            .add(newTask)
             .then((task) => {
                 const tasksCopy = [...tasks];
                 tasksCopy.push(task);
@@ -39,7 +50,6 @@ function Todo() {
                 toast.success('🦄 The task has been added successfully!');
             })
             .catch((err) => {
-                console.log('err', err);
                 toast.error(err.message);
             });
     };
@@ -91,7 +101,6 @@ function Todo() {
                 setTasks(newTasks);
                 setSelectedTasks(new Set());
                 setIsConfirmDialogOpen(false);
-
                 toast.success(`🦄 ${deletedTasksCount} tasks have been deleted successfully!`);
             })
             .catch((err) => {
@@ -112,44 +121,57 @@ function Todo() {
         setSelectedTasks(new Set());
     };
 
-    const onEditTask = (editedTask) => {        
+    const onEditTask = (editedTask) => {
         taskApi
             .update(editedTask)
             .then((task) => {
                 console.log('task', task);
+                const newTasks = [...tasks];
+                const foundIndex = newTasks.findIndex((t) => t._id === task._id);
+                newTasks[foundIndex] = task;
                 toast.success(`🦄 task has been updated successfully!`);
+                setTasks(newTasks);
                 setEditableTask(null);
             })
             .catch((err) => {
                 toast.error(err.message);
             });
-
-        
     };
+
+    const onFilter = (filters)=>{
+        getTasks(filters);
+      };
 
     return (
         <Container>
-            <Row className="justify-content-center">
-                <Col xs='12' sm='8' md='6' >
+            <Row>
+                <NavBar />
+            </Row>
+            <Row className="justify-content-center m-2">
+                <Col xs='6' sm='4' md='3' className="text-center p-1">
                     <Button
-                        variant="success"
+                        variant="success w-100"
                         onClick={() => setIsAddTaskModalOpen(true)}
                     >
                         Add new task
                     </Button>
                 </Col>
 
-                <Col xs='6' sm='4' md='3'>
-                    <Button variant='warning' onClick={selectAllTasks}>
+                <Col xs='6' sm='4' md='3' className="text-center p-1">
+                    <Button variant='primary w-100' onClick={selectAllTasks}>
                         Select all
                     </Button>
                 </Col>
 
-                <Col xs='6' sm='4' md='3'>
-                    <Button variant='secondary' onClick={resetSelectedTasks}>
+                <Col xs='6' sm='4' md='3' className="text-center p-1">
+                    <Button variant='secondary w-100' onClick={resetSelectedTasks}>
                         Reset selected
                     </Button>
                 </Col>
+            </Row>
+
+            <Row>
+            <Filters onFilter={onFilter}/>
             </Row>
 
             <Row>
@@ -162,6 +184,7 @@ function Todo() {
                             onTaskSelect={onTaskSelect}
                             checked={selectedTasks.has(task._id)}
                             onTaskEdit={setEditableTask}
+                            onStatusChange={onEditTask}
                         />
                     );
 
