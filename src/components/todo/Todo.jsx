@@ -10,17 +10,15 @@ import Task from '../task/Task';
 import styles from './todo.module.css'
 import ConfirmDialog from "../ConfirmDialog";
 import TaskModal from "../taskModal/TaskModal.jsx";
-import NavBar from "../NavBar/NavBar";
+import NavBar from "../navBar/NavBar.jsx";
 import Filters from "../filters/Filters.jsx";
 import TaskApi from '../../api/taskApi';
-
 
 const taskApi = new TaskApi();
 
 function Todo() {
     const [tasks, setTasks] = useState([]);
     const [selectedTasks, setSelectedTasks] = useState(new Set());
-    //const [taskToDelete, setTaskToDelete] = useState(null);
     const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
     const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
     const [editableTask, setEditableTask] = useState(null);
@@ -53,8 +51,7 @@ function Todo() {
                 toast.error(err.message);
             });
     };
-
-
+    
     const onTaskDelete = (taskId) => {
         taskApi
             .delete(taskId)
@@ -125,7 +122,6 @@ function Todo() {
         taskApi
             .update(editedTask)
             .then((task) => {
-                console.log('task', task);
                 const newTasks = [...tasks];
                 const foundIndex = newTasks.findIndex((t) => t._id === task._id);
                 newTasks[foundIndex] = task;
@@ -138,16 +134,16 @@ function Todo() {
             });
     };
 
-    const onFilter = (filters)=>{
+    const onFilter = (filters) => {
         getTasks(filters);
-      };
+    };
 
     return (
         <Container>
             <Row>
                 <NavBar />
             </Row>
-            <Row className="justify-content-center m-2">
+            <Row className="justify-content-center m-2"  >
                 <Col xs='6' sm='4' md='3' className="text-center p-1">
                     <Button
                         variant="success w-100"
@@ -158,23 +154,39 @@ function Todo() {
                 </Col>
 
                 <Col xs='6' sm='4' md='3' className="text-center p-1">
-                    <Button variant='primary w-100' onClick={selectAllTasks}>
+                    <Button
+                        variant='primary w-100'
+                        onClick={selectAllTasks}
+                    >
                         Select all
                     </Button>
                 </Col>
 
                 <Col xs='6' sm='4' md='3' className="text-center p-1">
-                    <Button variant='secondary w-100' onClick={resetSelectedTasks}>
+                    <Button
+                        variant='secondary w-100'
+                        onClick={resetSelectedTasks}
+                    >
                         Reset selected
+                    </Button>
+                </Col>
+
+                <Col xs='6' sm='4' md='3' className="text-center p-1">
+                    <Button
+                        variant='danger w-100'
+                        onClick={toggleConfirmDialog}
+                        disabled={!selectedTasks.size}
+                    >
+                        Delete selected
                     </Button>
                 </Col>
             </Row>
 
             <Row>
-            <Filters onFilter={onFilter}/>
+                <Filters onFilter={onFilter} />
             </Row>
 
-            <Row>
+            <Row className={styles.scrollTasks}>
                 {tasks.map((task) => {
                     return (
                         <Task
@@ -187,18 +199,9 @@ function Todo() {
                             onStatusChange={onEditTask}
                         />
                     );
-
                 })}
-
             </Row>
-            <Button
-                className={styles.deleteSelected}
-                variant="danger"
-                onClick={toggleConfirmDialog}
-                disabled={!selectedTasks.size}
-            >
-                Delete selected
-            </Button>
+
             {isConfirmDialogOpen && (
                 <ConfirmDialog
                     tasksCount={selectedTasks.size}
@@ -236,8 +239,6 @@ function Todo() {
             />
         </Container>
     );
-
-
 }
 
 export default Todo;

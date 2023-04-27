@@ -1,5 +1,4 @@
-.deleteSelected {
-    position: fixed;
-    right: 50px;
-    bottom: 20px;
+.scrollTasks {
+    overflow: auto;
+    height: 500px;
 }
