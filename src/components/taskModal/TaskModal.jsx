@@ -1,4 +1,4 @@
-import { useLayoutEffect, useEffect, useState, memo } from "react";
+import { useLayoutEffect, useEffect, useState, memo, useRef } from "react";
 import {
   Form,
   Button,
@@ -14,6 +14,11 @@ function TaskModal(props) {
   const [description, setDescription] = useState('');
   const [date, setDate] = useState(new Date());
   const [isTitleValid, setIsTitleValid] = useState(false);
+  const titleRef = useRef(null);
+
+  useEffect(()=>{
+    titleRef.current.focus();
+  }, []);
 
   useEffect(() => {
     const { data } = props;
@@ -62,6 +67,8 @@ function TaskModal(props) {
     };
   }, [title, description, date]);
 
+  const modalTitle = props.data ? 'Task edit' : 'Add new task';
+
   return (
     <Modal
       size="md"
@@ -69,7 +76,7 @@ function TaskModal(props) {
       onHide={props.onCancel}
     >
       <Modal.Header closeButton className="modal-content-bg">
-        <Modal.Title> Add new task </Modal.Title>
+        <Modal.Title> {modalTitle} </Modal.Title>
       </Modal.Header>
 
       <Modal.Body className="modal-content-bg">
@@ -78,6 +85,7 @@ function TaskModal(props) {
           placeholder="Title"
           value={title}
           onChange={onTitleChange}
+          ref={titleRef}
         />
         <Form.Control
           className='mb-2'
