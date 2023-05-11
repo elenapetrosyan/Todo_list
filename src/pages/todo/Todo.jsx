@@ -6,12 +6,11 @@ import {
     Col,
     Button,
 } from "react-bootstrap";
-import Task from '../task/Task';
+import Task from '../../components/task/Task';
 import styles from './todo.module.css'
-import ConfirmDialog from "../ConfirmDialog";
-import TaskModal from "../taskModal/TaskModal.jsx";
-import NavBar from "../navBar/NavBar.jsx";
-import Filters from "../filters/Filters.jsx";
+import ConfirmDialog from "../../components/ConfirmDialog";
+import TaskModal from "../../components/taskModal/TaskModal.jsx";
+import Filters from "../../components/filters/Filters.jsx";
 import TaskApi from '../../api/taskApi';
 
 const taskApi = new TaskApi();
@@ -140,9 +139,6 @@ function Todo() {
 
     return (
         <Container>
-            <Row>
-                <NavBar />
-            </Row>
             <Row className="justify-content-center m-2"  >
                 <Col xs='6' sm='4' md='3' className="text-center p-1">
                     <Button
