@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "react-datepicker/dist/react-datepicker.css";
+import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
@@ -9,7 +10,6 @@ import Contact from './pages/contact/Contact';
 import NavBar from './components/navBar/NavBar';
 import NotFound from './pages/notFound/NotFound';
 import SingleTask from './pages/singleTask/SingleTask';
-//import Flex from "./components/Flex";
 
 const pages = [
   {
@@ -44,34 +44,6 @@ function App() {
     <BrowserRouter>
       <main>
         <NavBar />
-
-        {/* <Flex justifyContent="center" border={true}> */}
-          {/* <div>test</div> */}
-          {/* <span>test1</span> */}
-          {/* <p>text example</p> */}
-          {/* <button>just button</button> */}
-        {/* </Flex> */}
-{/*  */}
-        {/* <Flex justifyContent="left"> */}
-          {/* <div>test-left</div> */}
-          {/* <span>test1-left</span> */}
-          {/* <p>text example-left</p> */}
-          {/* <button>just button</button> */}
-        {/* </Flex> */}
-{/*  */}
-        {/* <Flex justifyContent="right"> */}
-          {/* <div>test-right</div> */}
-          {/* <span>test1-right</span> */}
-          {/* <p>text example-right</p> */}
-          {/* <button>just button</button> */}
-        {/* </Flex> */}
-
-        {/* <Flex> */}
-          {/* <div>test</div> */}
-          {/* <span>test1</span> */}
-          {/* <p>text example</p> */}
-          {/* <button>just button</button> */}
-        {/* </Flex> */}
 
         <Routes>
           {pages.map((page) => (

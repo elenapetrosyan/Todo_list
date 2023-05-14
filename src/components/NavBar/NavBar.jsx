@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 import styles from './navBar.module.css';
 
 const activeLinkClassName = ({isActive}) =>{
-  const classes = [styles.navLink];
+  const classes = [];
   if(isActive){
     classes.push(styles.active);
   }
