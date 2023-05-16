@@ -53,7 +53,7 @@ function TaskModal(props) {
 
   useLayoutEffect(() => {
     const keydownHandler = (event) => {
-
+    
       if (event.key === 's' && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
         saveTask();
@@ -65,6 +65,7 @@ function TaskModal(props) {
     return () => {
       document.removeEventListener('keydown', keydownHandler);
     };
+    // eslint-disable-next-line
   }, [title, description, date]);
 
   const modalTitle = props.data ? 'Task edit' : 'Add new task';

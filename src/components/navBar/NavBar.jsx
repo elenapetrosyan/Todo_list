@@ -29,7 +29,7 @@ function NavBar() {
             <NavLink to="/contact" className={activeLinkClassName}>Contact us</NavLink>
           </Nav>
 
-        </Navbar.Collapse>
+        </Navbar.Collapse> 
       </Container>
     </Navbar>
   );
